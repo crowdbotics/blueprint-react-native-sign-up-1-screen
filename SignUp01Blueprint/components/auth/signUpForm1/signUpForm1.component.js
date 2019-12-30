@@ -16,38 +16,7 @@ import {
 } from '../../../core/validators';
 
 class SignUpForm1Component extends React.Component {
-  state = {
-    firstName: undefined,
-    lastName: undefined,
-    date: undefined,
-    email: undefined,
-    password: undefined,
-    termsAccepted: false,
-  };
-
-  onFirstNameInputTextChange = firstName => {
-    this.setState({firstName});
-  };
-
-  onLastNameValidationResult = lastName => {
-    this.setState({lastName});
-  };
-
-  onDateInputTextChange = date => {
-    this.setState({date});
-  };
-
-  onEmailInputTextChange = email => {
-    this.setState({email});
-  };
-
-  onPasswordInputTextChange = password => {
-    this.setState({password});
-  };
-
-  onTermsAcceptChange = termsAccepted => {
-    this.setState({termsAccepted});
-  };
+  
 
   isValid = value => {
     const {firstName, lastName, date, email, password, termsAccepted} = value;
@@ -62,10 +31,14 @@ class SignUpForm1Component extends React.Component {
     );
   };
 
+  getStatus = valid => {
+    return valid ? 'success' : 'danger';
+  };
+
   passwordCaption = () => {
-    return this.state.password
-      ? 'Password entered correctly'
-      : 'Password entered incorrectly';
+    return this.props.password && PasswordValidator(this.props.password)
+      ? 'Password is good'
+      : 'Password is at least 8 chars';
   };
 
   render() {
@@ -129,6 +102,7 @@ class SignUpForm1Component extends React.Component {
           status={email && this.getStatus(EmailValidator(email))}
           value={email}
           onChangeText={onEmailInputTextChange}
+          autoCapitalize="none"
         />
         <Input
           style={themedStyle.input}
@@ -147,11 +121,11 @@ class SignUpForm1Component extends React.Component {
         <CheckBox
           style={themedStyle.termsCheckBox}
           textStyle={themedStyle.termsCheckBoxText}
-          checked={this.state.termsAccepted}
+          checked={termsAccepted}
           text={
             'By creating an account, I agree to the Ewa Terms of\nUse and Privacy Policy'
           }
-          onChange={this.onTermsAcceptChange}
+          onChange={onTermsAcceptChange}
         />
       </View>
     );

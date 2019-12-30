@@ -23,6 +23,7 @@ function sendLogin({email, password}) {
 
 function sendSignUp({email, password}) {
   return request.post('/api/v1/signup/', {
+    username: email,
     email,
     password,
   });

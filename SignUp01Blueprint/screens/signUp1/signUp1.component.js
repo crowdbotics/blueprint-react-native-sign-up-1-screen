@@ -1,86 +1,122 @@
 import React from 'react';
-import {
-  ImageProps,
-  View,
-} from 'react-native';
+import {ImageProps, View} from 'react-native';
 import {
   StyleType,
   ThemedComponentProps,
   ThemeType,
   withStyles,
-  Icon
+  Icon,
 } from 'react-native-ui-kitten';
-import {
-  Button,
-  Text,
-} from 'react-native-ui-kitten';
-import {
-  SignUpForm1,
-  SocialAuth,
-} from '../../components/auth';
+import {Button, Text} from 'react-native-ui-kitten';
+import {SignUpForm1, SocialAuth} from '../../components/auth';
 import {
   ScrollableAvoidKeyboard,
   ImageOverlay,
   textStyle,
 } from '../../components/common';
+import {EmailValidator, PasswordValidator} from '../../core/validators';
+
 // import {
 //   ArrowForwardIconOutline,
 //   HeartIconFill,
 // } from '@src/assets/icons';
 
-
 const imageSignUp1Bg = require('../../assets/images/image-background-sign-up-1.jpg');
 
 class SignUp1Component extends React.Component {
-
-   state = {
-    formData: undefined,
+  state = {
+    firstName: undefined,
+    lastName: undefined,
+    date: undefined,
+    email: undefined,
+    password: undefined,
+    termsAccepted: false,
   };
 
-   backgroundImage = imageSignUp1Bg;
-
-   onFormDataChange = (formData) => {
-    this.setState({ formData });
+  onFirstNameInputTextChange = firstName => {
+    this.setState({firstName});
   };
 
-   onSignUpButtonPress = () => {
-    this.props.onSignUpPress(this.state.formData);
+  onLastNameValidationResult = lastName => {
+    this.setState({lastName});
   };
 
-   onSignInButtonPress = () => {
+  onDateInputTextChange = date => {
+    this.setState({date});
+  };
+
+  onEmailInputTextChange = email => {
+    this.setState({email});
+  };
+
+  onPasswordInputTextChange = password => {
+    this.setState({password});
+  };
+
+  onTermsAcceptChange = termsAccepted => {
+    this.setState({termsAccepted: !this.state.termsAccepted});
+  };
+
+  backgroundImage = imageSignUp1Bg;
+
+  onSignUpButtonPress = () => {
+    // this.props.onSignUpPress(this.state.formData);
+    this.props.onSignUpPress({
+      email: this.state.email,
+      password: this.state.password,
+    });
+  };
+
+  onSignInButtonPress = () => {
     this.props.onSignInPress();
   };
 
-   onGoogleButtonPress = () => {
+  onGoogleButtonPress = () => {
     this.props.onGooglePress();
   };
 
-   onFacebookButtonPress = () => {
+  onFacebookButtonPress = () => {
     this.props.onFacebookPress();
   };
 
-   onTwitterButtonPress = () => {
+  onTwitterButtonPress = () => {
     this.props.onTwitterPress();
   };
 
-   onEwaButtonPress = () => {
+  onEwaButtonPress = () => {
     this.props.onEwaPress();
   };
 
-   renderEwaButtonIcon = (style) => {
-    const { themedStyle } = this.props;
+  renderEwaButtonIcon = style => {
+    const {themedStyle} = this.props;
 
     return <Icon {...themedStyle.ewaButtonIcon} name="heart" />;
   };
 
-   renderSignInButtonIcon = (style) => {
-    const { themedStyle } = this.props;
+  renderSignInButtonIcon = style => {
+    const {themedStyle} = this.props;
 
-    return <Icon {...themedStyle.signInButtonIcon} name="arrow-forward-outline" />;
+    return (
+      <Icon {...themedStyle.signInButtonIcon} name="arrow-forward-outline" />
+    );
   };
 
-   render() {
-    const { themedStyle } = this.props;
+  validator() {
+    const {firstName, lastName, date, email, password, termsAccepted} = this.state;
+
+    return (
+      firstName !== undefined &&
+      lastName !== undefined &&
+      date !== undefined &&
+      email !== undefined &&
+      EmailValidator(this.state.email) &&
+      password !== undefined &&
+      termsAccepted && PasswordValidator(password)
+    );
+  }
+
+  render() {
+    const {themedStyle} = this.props;
 
     return (
       <ScrollableAvoidKeyboard style={themedStyle.container}>
@@ -88,26 +124,24 @@ class SignUp1Component extends React.Component {
           style={themedStyle.headerContainer}
           source={this.backgroundImage}>
           <Button
-            appearance='ghost'
+            appearance="ghost"
             style={themedStyle.ewaButton}
             textStyle={themedStyle.ewaButtonText}
-            size='large'
+            size="large"
             activeOpacity={0.75}
             icon={this.renderEwaButtonIcon}
             onPress={this.onEwaButtonPress}>
             EWA
           </Button>
           <View style={themedStyle.signUpContainer}>
-            <Text
-              style={themedStyle.signInLabel}
-              category='h4'>
+            <Text style={themedStyle.signInLabel} category="h4">
               SIGN UP
             </Text>
             <Button
               style={themedStyle.signInButton}
               textStyle={themedStyle.signInButtonText}
-              appearance='ghost'
-              size='giant'
+              appearance="ghost"
+              size="giant"
               activeOpacity={0.75}
               icon={this.renderSignInButtonIcon}
               onPress={this.onSignInButtonPress}>
@@ -119,35 +153,45 @@ class SignUp1Component extends React.Component {
           style={themedStyle.socialAuthContainer}
           hintStyle={themedStyle.socialAuthHint}
           iconStyle={themedStyle.socialAuthIcon}
-          hint='Sign with a social account'
+          hint="Sign with a social account"
           onGooglePress={this.onGoogleButtonPress}
           onFacebookPress={this.onFacebookButtonPress}
           onTwitterPress={this.onTwitterButtonPress}
         />
         <View style={themedStyle.orContainer}>
-          <View style={themedStyle.divider}/>
-          <Text
-            style={themedStyle.orLabel}
-            category='h5'>
+          <View style={themedStyle.divider} />
+          <Text style={themedStyle.orLabel} category="h5">
             OR
           </Text>
-          <View style={themedStyle.divider}/>
+          <View style={themedStyle.divider} />
         </View>
-        <Text
-          style={themedStyle.emailSignLabel}>
-          Sign up with Email
-        </Text>
+        <Text style={themedStyle.emailSignLabel}>Sign up with Email</Text>
+        {this.props.errorMsg && (
+          <View style={themedStyle.msgContainer}>
+            <Text style={{color: 'red'}}>{this.props.errorMsg}</Text>
+          </View>
+        )}
         <SignUpForm1
           style={themedStyle.formContainer}
-          onDataChange={this.onFormDataChange}
+          firstName={this.state.firstName}
+          lastName={this.state.lastName}
+          date={this.state.date}
+          email={this.state.email}
+          password={this.state.password}
+          termsAccepted={this.state.termsAccepted}
+          onFirstNameInputTextChange={this.onFirstNameInputTextChange}
+          onLastNameValidationResult={this.onLastNameValidationResult}
+          onDateInputTextChange={this.onDateInputTextChange}
+          onEmailInputTextChange={this.onEmailInputTextChange}
+          onPasswordInputTextChange={this.onPasswordInputTextChange}
+          onTermsAcceptChange={this.onTermsAcceptChange}
         />
         <Button
           style={themedStyle.signUpButton}
           //textStyle={textStyle.button}
-          size='large'
-          //disabled={!this.state.formData}
-          //onPress={this.onSignUpButtonPress}
-          >
+          size="large"
+          disabled={!this.validator()}
+          onPress={this.onSignUpButtonPress}>
           SIGN UP
         </Button>
       </ScrollableAvoidKeyboard>
@@ -155,7 +199,7 @@ class SignUp1Component extends React.Component {
   }
 }
 
-export const SignUp1 = withStyles(SignUp1Component, (theme) => ({
+export const SignUp1 = withStyles(SignUp1Component, theme => ({
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-1'],
@@ -238,5 +282,12 @@ export const SignUp1 = withStyles(SignUp1Component, (theme) => ({
     height: 1,
     backgroundColor: theme['background-basic-color-3'],
   },
+  msgContainer: {
+    borderWidth: 2,
+    borderColor: '#e3e3e3',
+    padding: 10,
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
-
