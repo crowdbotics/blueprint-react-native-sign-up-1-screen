@@ -16,8 +16,8 @@ source blueprint-lib/init.sh
 # APP_NAME is the name of the Django app that will be modified
 ##
 
-BLUEPRINT="ContactsBlueprint"
-NAME="Contacts"
+BLUEPRINT="SignUp01Blueprint"
+NAME="SignUp 01"
 
 DATA_1="{ name: '${BLUEPRINT}', human_name: '${NAME}', access_route: '${BLUEPRINT}'},"
 DATA_2="import { ${BLUEPRINT}Navigator } from '..\/features\/${BLUEPRINT}\/navigator';"
