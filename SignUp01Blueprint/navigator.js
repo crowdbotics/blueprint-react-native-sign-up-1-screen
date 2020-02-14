@@ -4,7 +4,7 @@ import {SignUp1Container} from './screens/signUp1/signUp1.container';
 
 import Home from './screens';
 
-export const SignUp01BlueprintNavigator = createStackNavigator(
+export default SignUp01BlueprintNavigator = createStackNavigator(
   {
     Home: {screen: Home},
     SignUp1: {screen: SignUp1Container},
